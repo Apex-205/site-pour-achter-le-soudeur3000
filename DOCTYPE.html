@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soudeur3000 — Objet inutile à acheter</title>
+  <meta name="description" content="Achetez le Soudeur3000, le fer à souder qui ne soude pas : une pile collée à un crayon, un interrupteur, un fil... et absolument aucune utilité." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f5f1e8;
+      --paper:#fffaf0;
+      --ink:#171717;
+      --muted:#5f5a52;
+      --gold:#d8a72f;
+      --gold-deep:#9d6f00;
+      --red:#d94a38;
+      --line:#1f1f1f;
+      --cream:#efe3bf;
+      --accent:#0f7b6c;
+      --shadow:0 18px 50px rgba(0,0,0,.12);
+      --radius:22px;
+      --max:1240px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:"Inter", sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(216,167,47,.12), transparent 22%),
+        radial-gradient(circle at 90% 20%, rgba(217,74,56,.08), transparent 18%),
+        linear-gradient(180deg, #f8f4ec 0%, #f1ebde 100%);
+      color:var(--ink);
+      overflow-x:hidden;
+    }
+
+    .grain::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.08;
+      background-image:
+        linear-gradient(rgba(0,0,0,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px);
+      background-size: 7px 7px, 7px 7px;
+      mix-blend-mode:multiply;
+    }
+
+    .wrap{width:min(var(--max), calc(100% - 2rem)); margin-inline:auto}
+
+    .reveal{
+      opacity:0;
+      transform:translateY(22px);
+      transition:opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .stagger > *{
+      opacity:0;
+      transform:translateY(18px);
+      animation:rise .8s ease forwards;
+    }
+    .stagger > *:nth-child(1){animation-delay:.08s}
+    .stagger > *:nth-child(2){animation-delay:.18s}
+    .stagger > *:nth-child(3){animation-delay:.28s}
+    .stagger > *:nth-child(4){animation-delay:.38s}
+    .stagger > *:nth-child(5){animation-delay:.48s}
+
+    @keyframes rise{
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    nav{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter: blur(12px);
+      background:rgba(255,250,240,.72);
+      border-bottom:1px solid rgba(23,23,23,.09);
+    }
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:.9rem 0;
+      gap:1rem;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:.85rem;
+      text-decoration:none;
+      color:var(--ink);
+      font-weight:800;
+      letter-spacing:.02em;
+    }
+    .brand-mark{
+      width:44px;
+      height:44px;
+      border-radius:12px;
+      background:linear-gradient(145deg, var(--gold), #f4c64e);
+      border:2px solid var(--line);
+      position:relative;
+      box-shadow:var(--shadow);
+      flex:none;
+    }
+    .brand-mark::before{
+      content:"";
+      position:absolute;
+      width:22px;
+      height:8px;
+      background:var(--red);
+      border:2px solid var(--line);
+      border-radius:6px;
+      left:10px; top:5px;
+    }
+    .brand-mark::after{
+      content:"";
+      position:absolute;
+      width:26px;
+      height:4px;
+      background:var(--line);
+      border-radius:20px;
+      right:-12px; top:20px;
+      transform:rotate(18deg);
+    }
+
+    .nav-links{
+      display:flex;
+      gap:1rem;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .nav-links a{
+      color:var(--ink);
+      text-decoration:none;
+      font-weight:600;
+      font-size:.95rem;
+      opacity:.82;
+    }
+    .nav-links a:hover{opacity:1}
+    .btn{
+      appearance:none;
+      border:none;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.6rem;
+      padding:.95rem 1.2rem;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:800;
+      transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+    }
+    .btn:active{transform:translateY(1px) scale(.99)}
+    .btn-primary{
+      background:var(--ink);
+      color:#fff;
+      box-shadow:0 12px 24px rgba(23,23,23,.16);
+    }
+    .btn-primary:hover{
+      transform:translateY(-2px) scale(1.01);
+      box-shadow:0 18px 30px rgba(23,23,23,.2);
+    }
+    .btn-secondary{
+      background:transparent;
+      color:var(--ink);
+      border:2px solid var(--ink);
+    }
+    .btn-secondary:hover{
+      background:var(--ink);
+      color:#fff;
+      transform:translateY(-2px);
+    }
+
+    header.hero{
+      padding:clamp(2rem, 3vw, 3rem) 0 2rem;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:1.4rem;
+      align-items:end;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:.6rem;
+      font-size:.84rem;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color:var(--muted);
+      font-weight:800;
+      margin-bottom:1rem;
+    }
+    .eyebrow::before{
+      content:"";
+      width:36px; height:2px;
+      background:var(--red);
+      display:inline-block;
+    }
+
+    h1,h2,h3{
+      font-family:"Bebas Neue", cursive;
+      line-height:.95;
+      margin:0;
+      letter-spacing:.01em;
+    }
+    h1{
+      font-size:clamp(3.6rem, 11vw, 8.5rem);
+      max-width:10ch;
+    }
+    .hero-copy p{
+      font-size:clamp(1rem, 1.6vw, 1.15rem);
+      line-height:1.7;
+      max-width:62ch;
+      color:var(--muted);
+      margin:1.1rem 0 0;
+    }
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.85rem;
+      margin-top:1.5rem;
+    }
+
+    .price-ribbon{
+      display:inline-flex;
+      align-items:center;
+      gap:.75rem;
+      margin-top:1.5rem;
+      background:rgba(255,255,255,.65);
+      border:1px solid rgba(23,23,23,.12);
+      padding:.65rem .85rem;
+      border-radius:999px;
+      backdrop-filter: blur(10px);
+    }
+    .price-ribbon strong{
+      font-size:1.2rem;
+    }
+    .price-ribbon s{
+      color:var(--muted);
+      opacity:.7;
+    }
+
+    .hero-stage{
+      position:relative;
+      min-height:460px;
+      background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.3));
+      border:2px solid rgba(23,23,23,.12);
+      border-radius:calc(var(--radius) + 8px);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      isolation:isolate;
+    }
+    .hero-stage::before{
+      content:"";
+      position:absolute;
+      inset:auto -10% -25% auto;
+      width:320px;
+      height:320px;
+      background:radial-gradient(circle, rgba(217,74,56,.14), transparent 60%);
+      border-radius:50%;
+    }
+    .hero-stage::after{
+      content:"";
+      position:absolute;
+      left:-8%;
+      top:-12%;
+      width:280px; height:280px;
+      background:radial-gradient(circle, rgba(216,167,47,.18), transparent 60%);
+      border-radius:50%;
+    }
+
+    .hero-badges{
+      position:absolute;
+      top:1rem; right:1rem;
+      display:grid;
+      gap:.7rem;
+      z-index:2;
+    }
+    .badge{
+      background:rgba(255,250,240,.75);
+      border:1px solid rgba(23,23,23,.12);
+      backdrop-filter:blur(10px);
+      border-radius:999px;
+      padding:.65rem .9rem;
+      font-size:.88rem;
+      font-weight:800;
+      box-shadow:var(--shadow);
+    }
+
+    .product-label{
+      position:absolute;
+      left:1.1rem; top:1rem;
+      background:var(--red);
+      color:#fff;
+      padding:.5rem .8rem;
+      border-radius:999px;
+      font-size:.8rem;
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      z-index:2;
+    }
+
+    .diagram{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+    }
+
+    .section{
+      padding:4rem 0;
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:1.2rem;
+    }
+
+    .panel{
+      background:rgba(255,250,240,.7);
+      border:1px solid rgba(23,23,23,.1);
+      border-radius:var(--radius);
+      padding:1.2rem;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .kicker{
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-weight:800;
+      color:var(--accent);
+      margin-bottom:.55rem;
+      display:block;
+    }
+
+    .big-copy{
+      font-size:clamp(2.2rem, 7vw, 5rem);
+      max-width:11ch;
+    }
+
+    .bullets{
+      list-style:none;
+      padding:0;
+      margin:1rem 0 0;
+      display:grid;
+      gap:.95rem;
+    }
+    .bullets li{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:.8rem;
+      align-items:start;
+    }
+    .bullet-mark{
+      width:14px; height:14px;
+      background:var(--gold);
+      border:2px solid var(--line);
+      border-radius:50%;
+      margin-top:.3rem;
+      flex:none;
+    }
+    .bullets strong{display:block; margin-bottom:.2rem}
+    .bullets span{color:var(--muted); line-height:1.6}
+
+    .feature-layout{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:1rem;
+    }
+
+    .spec-band{
+      border-top:2px solid var(--ink);
+      border-bottom:2px solid var(--ink);
+      background:linear-gradient(90deg, #ead389, #f3e6bd);
+      overflow:hidden;
+    }
+    .spec-track{
+      display:flex;
+      gap:2rem;
+      white-space:nowrap;
+      padding:.9rem 0;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      animation:marquee 22s linear infinite;
+    }
+    @keyframes marquee{
+      from{transform:translateX(0)}
+      to{transform:translateX(-50%)}
+    }
+
+    .buy-strip{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:1rem;
+      align-items:stretch;
+    }
+
+    .price-box{
+      display:grid;
+      gap:.9rem;
+      align-content:start;
+    }
+    .price-main{
+      display:flex;
+      align-items:end;
+      gap:.8rem;
+      flex-wrap:wrap;
+    }
+    .price-main strong{
+      font-size:clamp(2.4rem, 6vw, 4.5rem);
+      line-height:1;
+      font-family:"Bebas Neue", cursive;
+    }
+    .stock{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      font-weight:700;
+      color:var(--accent);
+    }
+    .stock::before{
+      content:"";
+      width:10px; height:10px;
+      background:var(--accent);
+      border-radius:50%;
+      box-shadow:0 0 0 6px rgba(15,123,108,.12);
+    }
+
+    .fine{
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .mini-form{
+      display:grid;
+      gap:.85rem;
+      margin-top:1rem;
+    }
+    .mini-form input, .mini-form select{
+      width:100%;
+      padding:1rem 1rem;
+      border-radius:14px;
+      border:1px solid rgba(23,23,23,.16);
+      background:#fffdf7;
+      font:inherit;
+      color:var(--ink);
+      outline:none;
+    }
+    .mini-form input:focus, .mini-form select:focus{
+      border-color:var(--ink);
+      box-shadow:0 0 0 4px rgba(23,23,23,.08);
+    }
+
+    .warn{
+      display:inline-block;
+      background:#fff1d8;
+      border:1px solid rgba(157,111,0,.25);
+      color:#6f5600;
+      padding:.6rem .8rem;
+      border-radius:14px;
+      font-weight:700;
+      font-size:.92rem;
+    }
+
+    footer{
+      padding:2.5rem 0 4rem;
+      color:var(--muted);
+    }
+    .footer-box{
+      display:flex;
+      justify-content:space-between;
+      gap:1rem;
+      flex-direction:column;
+      border-top:1px solid rgba(23,23,23,.12);
+      padding-top:1.2rem;
+    }
+
+    @media (min-width: 860px){
+      .hero-grid{
+        grid-template-columns:1.02fr .98fr;
+        gap:1.6rem;
+      }
+      .split{
+        grid-template-columns:1fr 1fr;
+      }
+      .feature-layout{
+        grid-template-columns:1.1fr .9fr;
+      }
+      .buy-strip{
+        grid-template-columns:.95fr 1.05fr;
+      }
+      .footer-box{
+        flex-direction:row;
+        align-items:center;
+      }
+    }
+
+    .shake:hover{
+      animation:shake .38s linear;
+    }
+    @keyframes shake{
+      0%,100%{transform:rotate(0)}
+      25%{transform:rotate(-1deg)}
+      75%{transform:rotate(1deg)}
+    }
+  </style>
+</head>
+<body class="grain">
+  <nav aria-label="Navigation principale">
+    <div class="wrap nav-inner">
+      <a href="#top" class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>SOUDEUR3000</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#concept">Concept</a>
+        <a href="#details">Détails</a>
+        <a href="#acheter">Acheter</a>
+        <a class="btn btn-primary" href="#acheter">Je le veux</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero wrap" id="top">
+    <div class="hero-grid">
+      <div class="hero-copy stagger">
+        <span class="eyebrow">Objet inutile • édition absurde</span>
+        <h1>Le fer à souder qui ne soude pas.</h1>
+        <p>
+          Voici le <strong>Soudeur3000</strong> : une pile collée à un crayon coupé,
+          un interrupteur, un fil, et une promesse tenue à 100% :
+          <strong>ça ne sert à rien</strong>. Parfait pour offrir, exposer, ou regretter un achat avec style.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#acheter" class="btn btn-primary">Acheter maintenant</a>
+          <a href="#details" class="btn btn-secondary">Voir la fiche</a>
+        </div>
+
+        <div class="price-ribbon" aria-label="Prix promotionnel">
+          <span>Prix de lancement</span>
+          <strong>19,99€</strong>
+          <s>29,99€</s>
+        </div>
+      </div>
+
+      <div class="hero-stage reveal">
+        <div class="product-label">Nouveau inutile</div>
+        <div class="hero-badges" aria-hidden="true">
+          <div class="badge">0% efficacité</div>
+          <div class="badge">100% conversation</div>
+          <div class="badge">Garantie déception chic</div>
+        </div>
+
+        <svg class="diagram shake" viewBox="0 0 760 560" role="img" aria-label="Illustration du Soudeur3000 : une pile collée sur un crayon coupé avec un interrupteur et un fil">
+          <defs>
+            <linearGradient id="batteryG" x1="0" x2="1">
+              <stop offset="0%" stop-color="#e3b23d"/>
+              <stop offset="100%" stop-color="#bf8d1f"/>
+            </linearGradient>
+            <linearGradient id="pencilG" x1="0" x2="1">
+              <stop offset="0%" stop-color="#d8a72f"/>
+              <stop offset="100%" stop-color="#c38f1e"/>
+            </linearGradient>
+            <linearGradient id="metalG" x1="0" x2="1">
+              <stop offset="0%" stop-color="#d7d7d7"/>
+              <stop offset="100%" stop-color="#9d9d9d"/>
+            </linearGradient>
+          </defs>
+
+          <rect x="0" y="0" width="760" height="560" fill="transparent"/>
+
+          <!-- ombre -->
+          <ellipse cx="370" cy="390" rx="220" ry="28" fill="rgba(0,0,0,.12)"/>
+
+          <!-- crayon coupé -->
+          <g>
+            <polygon points="92,386 146,370 146,402" fill="#1e1e1e" stroke="#1f1f1f" stroke-width="2"/>
+            <polygon points="146,370 175,360 175,412 146,402" fill="#e4b480" stroke="#1f1f1f" stroke-width="2"/>
+            <line x1="156" y1="385" x2="168" y2="377" stroke="#6a4a2a" stroke-width="2"/>
+            <line x1="156" y1="385" x2="169" y2="394" stroke="#6a4a2a" stroke-width="2"/>
+            <rect x="175" y="360" rx="10" ry="10" width="395" height="52" fill="url(#pencilG)" stroke="#1f1f1f" stroke-width="2"/>
+            <line x1="210" y1="360" x2="210" y2="412" stroke="#9c6b0c" stroke-width="3"/>
+            <line x1="225" y1="360" x2="225" y2="412" stroke="#9c6b0c" stroke-width="3"/>
+            <circle cx="570" cy="386" r="25" fill="#d7b183" stroke="#1f1f1f" stroke-width="2"/>
+            <text x="300" y="396" font-family="Inter, sans-serif" font-weight="800" font-size="22" fill="#1a1a1a">Soudeur3000</text>
+          </g>
+
+          <!-- colle -->
+          <path d="M208 346 C230 324, 255 340, 260 358 C266 374, 250 392, 270 406 C282 414, 281 434, 270 442 C254 454, 232 445, 230 421 C228 404, 212 390, 202 380 C188 367, 190 354, 208 346 Z"
+                fill="#f3f1ea" stroke="#9b9b90" stroke-width="2"/>
+          <path d="M450 351 C470 339, 490 350, 490 366 C490 383, 470 389, 466 403 C462 417, 445 420, 434 412 C425 405, 425 391, 433 382 C441 372, 437 358, 450 351 Z"
+                fill="#f3f1ea" stroke="#9b9b90" stroke-width="2"/>
+          <path d="M322 302 C350 279, 382 289, 395 314 C404 332, 389 348, 370 350 C351 351, 336 345, 326 333 C315 320, 308 313, 322 302 Z"
+                fill="#f3f1ea" stroke="#9b9b90" stroke-width="2"/>
+
+          <!-- pile -->
+          <g>
+            <rect x="255" y="282" width="210" height="72" rx="10" fill="url(#batteryG)" stroke="#1f1f1f" stroke-width="3"/>
+            <ellipse cx="465" cy="318" rx="10" ry="36" fill="#d1d1d1" stroke="#1f1f1f" stroke-width="3"/>
+            <path d="M270 298 h170" stroke="rgba(255,255,255,.45)" stroke-width="4" stroke-linecap="round"/>
+          </g>
+
+          <!-- interrupteur -->
+          <g>
+            <rect x="336" y="250" width="58" height="24" rx="6" fill="#e24a36" stroke="#1f1f1f" stroke-width="3"/>
+            <path d="M324 270 h82 l-6 12 h-70 z" fill="#c63d2d" stroke="#1f1f1f" stroke-width="3"/>
+          </g>
+
+          <!-- fil -->
+          <path d="M472 318 C530 316, 546 280, 530 236 C514 193, 509 151, 566 140 C622 133, 645 186, 634 231 C624 278, 641 314, 642 350"
+                fill="none" stroke="#171717" stroke-width="5" stroke-linecap="round"/>
+
+          <!-- étiquettes -->
+          <g font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="#171717">
+            <text x="102" y="210">Battery</text>
+            <text x="575" y="305">Switch</text>
+            <text x="70" y="470">Pencil</text>
+            <text x="567" y="470">Wire</text>
+          </g>
+          <g stroke="#171717" stroke-width="2.2" fill="none" stroke-linecap="round">
+            <path d="M187 222 L240 280"/>
+            <path d="M615 320 L556 352"/>
+            <path d="M145 445 L109 420"/>
+            <path d="M583 446 L543 428"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <section class="spec-band" aria-label="Informations clés">
+    <div class="spec-track">
+      <span>Soudeur3000 • pile collée • crayon coupé • interrupteur décoratif • fil très sérieux • aucun résultat • Soudeur3000 • pile collée • crayon coupé • interrupteur décoratif • fil très sérieux • aucun résultat •</span>
+      <span>Soudeur3000 • pile collée • crayon coupé • interrupteur décoratif • fil très sérieux • aucun résultat • Soudeur3000 • pile collée • crayon coupé • interrupteur décoratif • fil très sérieux • aucun résultat •</span>
+    </div>
+  </section>
+
+  <main>
+    <section class="section" id="concept">
+      <div class="wrap split">
+        <div class="panel reveal">
+          <span class="kicker">Le concept</span>
+          <h2 class="big-copy">Une invention parfaitement ratée.</h2>
+        </div>
+
+        <div class="panel reveal">
+          <p class="fine">
+            Le <strong>Soudeur3000</strong> n’est pas un outil. C’est une expérience.
+            Une déclaration. Un hommage au bricolage improvisé qui va trop loin.
+            Si vous avez toujours rêvé d’acheter un objet qui ressemble à un fer à souder
+            mais qui ne soude absolument rien, vous êtes au bon endroit.
+          </p>
+
+          <ul class="bullets">
+            <li>
+              <span class="bullet-mark" aria-hidden="true"></span>
+              <div>
+                <strong>Design artisanal douteux</strong>
+                <span>Une pile, un crayon coupé à la fin de la pile, un interrupteur, un fil. Le chef-d’œuvre de l’inutile.</span>
+              </div>
+            </li>
+            <li>
+              <span class="bullet-mark" aria-hidden="true"></span>
+              <div>
+                <strong>Impact émotionnel garanti</strong>
+                <span>Fait rire, fait parler, fait regretter. Rarement les trois à la fois.</span>
+              </div>
+            </li>
+            <li>
+              <span class="bullet-mark" aria-hidden="true"></span>
+              <div>
+                <strong>Zéro performance technique</strong>
+                <span>Pas de soudure, pas de chauffe utile, pas de miracle. Une honnêteté radicale.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="details">
+      <div class="wrap feature-layout">
+        <div class="panel reveal">
+          <span class="kicker">Fiche d’achat</span>
+          <h2 style="font-size:clamp(2.4rem,6vw,5rem); margin-bottom:1rem;">Pourquoi l’acheter ?</h2>
+          <p class="fine">
+            Parce qu’un objet inutile bien présenté devient presque indispensable.
+            Le Soudeur3000 est idéal pour une déco d’atelier absurde, un cadeau nul mais mémorable,
+            ou une collection d’objets impossibles.
+          </p>
+        </div>
+
+        <div class="panel reveal">
+          <ul class="bullets">
+            <li>
+              <span class="bullet-mark"></span>
+              <div>
+                <strong>Nom du produit</strong>
+                <span>Soudeur3000</span>
+              </div>
+            </li>
+            <li>
+              <span class="bullet-mark"></span>
+              <div>
+                <strong>Composition</strong>
+                <span>Pile collée sur crayon coupé, interrupteur visible, fil reliant l’ensemble.</span>
+              </div>
+            </li>
+            <li>
+              <span class="bullet-mark"></span>
+              <div>
+                <strong>Utilité réelle</strong>
+                <span>Aucune, et c’est ce qui fait son charme.</span>
+              </div>
+            </li>
+            <li>
+              <span class="bullet-mark"></span>
+              <div>
+                <strong>Public cible</strong>
+                <span>Amateurs d’objets drôles, cadeaux absurdes, bricoleurs désespérés.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="acheter">
+      <div class="wrap buy-strip">
+        <div class="panel reveal">
+          <span class="kicker">Achat</span>
+          <h2 style="font-size:clamp(2.6rem,7vw,5.5rem);">Achetez-le avant qu’il ne serve à rien ailleurs.</h2>
+          <div class="price-box">
+            <div class="price-main">
+              <strong>19,99€</strong>
+              <span class="warn">Livraison imaginairement rapide</span>
+            </div>
+            <div class="stock">En stock inutile</div>
+            <p class="fine">
+              Paiement sécurisé fictif. Retour accepté si vous prouvez que ça a soudé quelque chose.
+            </p>
+          </div>
+        </div>
+
+        <div class="panel reveal">
+          <form class="mini-form" id="buyForm">
+            <label>
+              <span class="kicker" style="margin-bottom:.4rem; color:var(--ink);">Votre nom</span>
+              <input type="text" placeholder="Ex : Kevin le bricoleur" required>
+            </label>
+
+            <label>
+              <span class="kicker" style="margin-bottom:.4rem; color:var(--ink);">Quantité</span>
+              <select>
+                <option>1 Soudeur3000</option>
+                <option>2 Soudeur3000</option>
+                <option>3 Soudeur3000</option>
+                <option>10 Soudeur3000 (mauvaise idée)</option>
+              </select>
+            </label>
+
+            <label>
+              <span class="kicker" style="margin-bottom:.4rem; color:var(--ink);">Adresse e-mail</span>
+              <input type="email" placeholder="vous@exemple.fr" required>
+            </label>
+
+            <button class="btn btn-primary" type="submit">Valider mon achat absurde</button>
+            <p class="fine" id="confirmation" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-box">
+      <div>
+        <strong style="color:var(--ink)">Soudeur3000</strong><br>
+        <span>Le seul fer à souder qui assume ne pas souder.</span>
+      </div>
+      <div>
+        <a href="#top" style="color:var(--ink); font-weight:700; text-decoration:none;">Remonter ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {threshold:0.15});
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const form = document.getElementById('buyForm');
+    const confirmation = document.getElementById('confirmation');
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      confirmation.textContent = "Merci. Votre commande du Soudeur3000 est enregistrée. Préparez-vous à recevoir quelque chose de magnifiquement inutile.";
+      form.reset();
+    });
+  </script>
+</body>
+</html>
